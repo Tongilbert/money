@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>财神姥的偏爱名单：测测你的搞钱吸金指数？</title>
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 html2canvas 用于一键导出结果海报 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- 引入字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-ink: #0c0708;
+      --bg-card: rgba(24, 11, 14, 0.9);
+      --crimson-main: #d92638;
+      --gold-warm: #f6c453;
+      --gold-light: #ffe9b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: var(--bg-ink);
+      background-image:
+        radial-gradient(circle at 50% -5%, rgba(217, 38, 56, 0.28) 0%, transparent 55%),
+        radial-gradient(circle at 85% 85%, rgba(246, 196, 83, 0.14) 0%, transparent 50%),
+        linear-gradient(180deg, #0b0607 0%, #15090c 100%);
+      color: #fff8f5;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      overflow-x: hidden;
+    }
+
+    .font-serif-sc {
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    .font-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* 背景暖金星光画布 */
+    #spark-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 新中式朱砂金卡片 */
+    .caishen-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(246, 196, 83, 0.28);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 233, 179, 0.16);
+      backdrop-filter: blur(14px);
+    }
+
+    /* 朱砂金渐变标题 */
+    .gold-crimson-text {
+      background: linear-gradient(135deg, #fff0c2 0%, #f6c453 52%, #ff7b6b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 主按钮样式 */
+    .btn-fortune {
+      background: linear-gradient(135deg, #e11d48 0%, #b91c1c 55%, #d97706 100%);
+      color: #fffdf7;
+      border: 1px solid rgba(255, 233, 179, 0.35);
+      box-shadow: 0 12px 28px rgba(225, 29, 72, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-fortune:hover {
+      filter: brightness(1.07);
+      box-shadow: 0 14px 34px rgba(246, 196, 83, 0.28);
+    }
+
+    .btn-fortune:active {
+      transform: scale(0.98);
+    }
+
+    /* 选项样式 */
+    .choice-card {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(246, 196, 83, 0.18);
+      transition: all 0.2s ease;
+    }
+
+    .choice-card:hover {
+      background: rgba(217, 38, 56, 0.12);
+      border-color: rgba(246, 196, 83, 0.48);
+    }
+
+    .choice-card.active {
+      background: linear-gradient(90deg, rgba(217, 38, 56, 0.28) 0%, rgba(217, 119, 6, 0.16) 100%);
+      border-color: #f6c453;
+      box-shadow: 0 0 0 1px rgba(246, 196, 83, 0.35);
+    }
+
+    @keyframes riseIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-rise {
+      animation: riseIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .bar-anim {
+      transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center px-4 py-7 sm:py-10 relative">
+
+  <!-- 背景微光 -->
+  <canvas id="spark-canvas"></canvas>
+
+  <!-- 主体容器 -->
+  <main class="w-full max-w-md sm:max-w-xl relative z-10">
+
+    <!-- ==================== 1. 封面页 ==================== -->
+    <section id="view-intro" class="caishen-card rounded-3xl p-7 sm:p-10 text-center animate-rise">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/15 border border-amber-300/30 mb-6">
+        <span class="w-2 h-2 rounded-full bg-amber-300"></span>
+        <span class="text-xs tracking-widest text-amber-200 font-medium">财神姥的偏爱名单</span>
+      </div>
+
+      <!-- 简洁新中式金元宝/铜钱徽章 -->
+      <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-rose-600/30 to-amber-500/20 border border-amber-300/40 flex items-center justify-center shadow-[0_0_25px_rgba(246,196,83,0.18)]">
+        <svg class="w-10 h-10 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <circle cx="12" cy="12" r="8" />
+          <rect x="9.5" y="9.5" width="5" height="5" rx="0.8" />
+        </svg>
+      </div>
+
+      <h1 class="font-serif-sc text-2xl sm:text-3xl font-black leading-snug gold-crimson-text mb-3">
+        财神姥的偏爱名单：<br/>测测你的搞钱吸金指数？
+      </h1>
+      <p class="text-sm sm:text-base text-rose-100/80 leading-relaxed max-w-md mx-auto mb-8">
+        你是财神姥捧在手心的亲闺女/亲儿子，还是偶尔漏财的小糊涂？9道发薪日、大促、副业与红包日常题，测出你的真实吸金体质。
+      </p>
+
+      <!-- 三项轻量说明 -->
+      <div class="grid grid-cols-3 gap-3 py-4 px-3 rounded-2xl bg-black/40 border border-amber-300/15 mb-8 text-xs sm:text-sm">
+        <div>
+          <div class="font-num font-extrabold text-amber-300 text-base">9 题</div>
+          <div class="text-rose-200/60 text-xs mt-0.5">日常搞钱场景</div>
+        </div>
+        <div class="border-x border-white/10">
+          <div class="font-num font-extrabold text-amber-200 text-base" id="tested-num">19,480</div>
+          <div class="text-rose-200/60 text-xs mt-0.5">人已查名单</div>
+        </div>
+        <div>
+          <div class="font-num font-extrabold text-amber-300 text-base">3 维</div>
+          <div class="text-rose-200/60 text-xs mt-0.5">吸金守财偏财</div>
+        </div>
+      </div>
+
+      <button onclick="beginTest()" class="btn-fortune w-full py-4 px-6 rounded-2xl font-serif-sc font-bold text-base tracking-wider cursor-pointer">
+        查查我有没有上偏爱名单
+      </button>
+
+      <p class="mt-5 text-xs text-rose-200/45">
+        @静观 · 仅供娱乐与搞钱习惯参考
+      </p>
+    </section>
+
+    <!-- ==================== 2. 答题页 ==================== -->
+    <section id="view-quiz" class="hidden caishen-card rounded-3xl p-6 sm:p-9">
+      <div class="flex items-center justify-between text-xs sm:text-sm mb-3">
+        <span class="font-num font-bold text-amber-300">
+          第 <span id="step-num" class="text-base">01</span> / 09 题
+        </span>
+        <span id="step-tag" class="px-3 py-1 rounded-full bg-rose-500/15 border border-amber-300/25 text-amber-200 text-xs">
+          发薪日名场面
+        </span>
+      </div>
+
+      <div class="w-full h-1.5 bg-black/50 rounded-full overflow-hidden mb-7">
+        <div id="step-bar" class="h-full bg-gradient-to-r from-rose-500 via-amber-400 to-yellow-200 transition-all duration-300" style="width: 11.1%"></div>
+      </div>
+
+      <div id="question-box" class="animate-rise">
+        <h2 id="question-text" class="font-serif-sc text-lg sm:text-xl font-bold text-rose-50 leading-relaxed mb-6">
+          加载题目中...
+        </h2>
+        <div id="choices-wrap" class="space-y-3"></div>
+      </div>
+
+      <div class="mt-7 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-rose-200/55">
+        <button id="prev-btn" onclick="goPrev()" class="px-3 py-1.5 rounded-xl hover:bg-white/5 hover:text-amber-200 transition opacity-40 pointer-events-none cursor-pointer">
+          ← 上一题
+        </button>
+        <span>选最像你平时做法的那一项</span>
+      </div>
+    </section>
+
+    <!-- ==================== 3. 算分过渡页 ==================== -->
+    <section id="view-loading" class="hidden caishen-card rounded-3xl p-10 sm:p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-amber-300/25 border-t-amber-300 animate-spin"></div>
+      <h3 class="font-serif-sc text-lg sm:text-xl font-bold gold-crimson-text mb-2">财神姥正在翻看偏爱名单...</h3>
+      <p id="calc-hint" class="text-xs sm:text-sm text-rose-100/65">正在核对你的吸金力、守财力与偏财运...</p>
+    </section>
+
+    <!-- ==================== 4. 结果与打卡海报页 ==================== -->
+    <section id="view-result" class="hidden animate-rise">
+      <div id="result-poster" class="caishen-card rounded-3xl p-6 sm:p-9">
+        <div class="flex items-center justify-between text-xs text-amber-200/75 border-b border-amber-300/15 pb-3.5 mb-6">
+          <span class="font-num tracking-wider">CAISHEN LAO · #<span id="ticket-no">8888</span></span>
+          <span class="font-serif-sc">搞钱吸金指数档案</span>
+        </div>
+
+        <div class="text-center mb-7">
+          <div id="res-tag" class="inline-block px-3.5 py-1 rounded-full bg-rose-500/20 border border-amber-300/35 text-amber-200 text-xs font-medium mb-3">
+            名单评级
+          </div>
+          <h2 id="res-title" class="font-serif-sc text-2xl sm:text-3xl font-black gold-crimson-text mb-4">
+            结果称号
+          </h2>
+
+          <div class="inline-flex items-center gap-5 px-6 py-3 rounded-2xl bg-black/45 border border-amber-300/20">
+            <div>
+              <div class="text-[11px] text-rose-100/60">搞钱总分</div>
+              <div id="res-score" class="font-num text-xl sm:text-2xl font-extrabold text-amber-300">0 / 36</div>
+            </div>
+            <div class="w-px h-8 bg-white/10"></div>
+            <div>
+              <div class="text-[11px] text-rose-100/60">吸金指数</div>
+              <div id="res-index" class="font-num text-xl sm:text-2xl font-extrabold text-yellow-200">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 三维指标：吸金力、守财力、偏财运 -->
+        <div class="rounded-2xl bg-black/40 border border-white/10 p-4 sm:p-5 mb-6 space-y-3.5">
+          <div>
+            <div class="flex justify-between text-xs sm:text-sm mb-1.5">
+              <span class="text-rose-100/85">吸金力（抓机会与变现）</span>
+              <span id="d-val-1" class="font-num font-bold text-amber-300">0%</span>
+            </div>
+            <div class="w-full h-2 bg-stone-950 rounded-full overflow-hidden">
+              <div id="d-bar-1" class="bar-anim h-full bg-gradient-to-r from-rose-500 to-amber-300 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs sm:text-sm mb-1.5">
+              <span class="text-rose-100/85">守财力（攒得住与控漏斗）</span>
+              <span id="d-val-2" class="font-num font-bold text-amber-200">0%</span>
+            </div>
+            <div class="w-full h-2 bg-stone-950 rounded-full overflow-hidden">
+              <div id="d-bar-2" class="bar-anim h-full bg-gradient-to-r from-amber-500 to-yellow-200 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs sm:text-sm mb-1.5">
+              <span class="text-rose-100/85">偏财运（红包抽奖与顺风局）</span>
+              <span id="d-val-3" class="font-num font-bold text-amber-300">0%</span>
+            </div>
+            <div class="w-full h-2 bg-stone-950 rounded-full overflow-hidden">
+              <div id="d-bar-3" class="bar-anim h-full bg-gradient-to-r from-red-500 via-amber-400 to-yellow-200 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 特征解析与避坑行动建议 -->
+        <div class="space-y-4">
+          <div class="rounded-2xl bg-white/[0.03] border border-amber-300/15 p-4 sm:p-5">
+            <h3 class="font-serif-sc font-bold text-amber-300 text-sm sm:text-base mb-2">
+              财神姥点评与体质特征
+            </h3>
+            <p id="res-traits" class="text-xs sm:text-sm text-rose-50/90 leading-7"></p>
+          </div>
+
+          <div class="rounded-2xl bg-rose-500/10 border border-amber-300/25 p-4 sm:p-5">
+            <h3 class="font-serif-sc font-bold text-yellow-200 text-sm sm:text-base mb-2">
+              常见漏财坑点与行动建议
+            </h3>
+            <p id="res-tips" class="text-xs sm:text-sm text-rose-50/90 leading-7"></p>
+          </div>
+        </div>
+
+        <!-- 水印落款 -->
+        <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-rose-200/50">
+          <span>@静观</span>
+          <span>财神姥偏爱名单打卡</span>
+        </div>
+      </div>
+
+      <!-- 导出与重测按钮 -->
+      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button id="export-btn" onclick="makePoster()" class="btn-fortune py-3.5 px-5 rounded-2xl font-serif-sc font-bold text-sm cursor-pointer">
+          一键生成结果海报
+        </button>
+        <button onclick="againTest()" class="py-3.5 px-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-amber-300/25 text-amber-200 font-serif-sc text-sm transition cursor-pointer">
+          重新测一次
+        </button>
+      </div>
+      <p class="text-center text-xs text-rose-200/50 mt-3">
+        生成海报后长按图片即可保存到相册，方便发小红书或朋友圈
+      </p>
+    </section>
+
+  </main>
+
+  <!-- ==================== 5. 海报预览弹窗 ==================== -->
+  <div id="poster-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#180b0e] border border-amber-300/30 rounded-3xl p-4 sm:p-5">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs sm:text-sm text-amber-200 font-medium">长按图片保存到手机相册</span>
+        <button onclick="hidePosterModal()" class="text-xs text-rose-100/75 hover:text-white px-2.5 py-1 rounded-lg bg-white/10 cursor-pointer">
+          关闭
+        </button>
+      </div>
+      <div id="poster-preview" class="max-h-[72vh] overflow-y-auto rounded-2xl border border-white/10"></div>
+    </div>
+  </div>
+
+  <!-- 轻提示 -->
+  <div id="msg-toast" class="hidden fixed top-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-[#241015] border border-amber-300/40 text-xs text-amber-200 shadow-lg"></div>
+
+  <script>
+    // ==================== 9道日常搞钱、发薪、大促、副业与红包场景题 ====================
+    // 每题分值：0 / 1 / 3 / 4，满分 36 分
+    // dims: [吸金力, 守财力, 偏财运]
+    const QUESTIONS = [
+      {
+        tag: "发薪日名场面",
+        title: "每月发薪日刚到账，手机银行弹出入账提醒，你第一件最常干的事是？",
+        options: [
+          { text: "先划走固定一笔进攒钱账户或稳健理财，留出生活费再安排花销", score: 4, dims: [78, 94, 72] },
+          { text: "先把该还的账单和日常开支算清楚，剩多少再看怎么花", score: 3, dims: [68, 76, 65] },
+          { text: "先犒劳自己喝杯好的、吃顿大餐或买件心仪小玩意，开心最重要", score: 1, dims: [60, 40, 68] },
+          { text: "钱刚进来还没看清数字，各种自动扣款、凑单和冲动下单就接连到账了", score: 0, dims: [45, 20, 52] }
+        ]
+      },
+      {
+        tag: "大促凑单诱惑",
+        title: "双十一、618 或各种满减券弹窗刷屏，“再买一点就减几十”，你通常会？",
+        options: [
+          { text: "提前列好刚需清单，不在清单里的再便宜也不凑，绝不为折扣多花钱", score: 4, dims: [72, 92, 66] },
+          { text: "只挑平时就在等降价的日用/护肤囤货，顺手凑单不乱买", score: 3, dims: [66, 75, 68] },
+          { text: "拿计算器算半天满减规则，最后为了省 40 块硬是凑出了 300 块", score: 1, dims: [56, 36, 62] },
+          { text: "直播间或氛围一上头就下单，等快递到了才想起来家里还有同款", score: 0, dims: [48, 18, 58] }
+        ]
+      },
+      {
+        tag: "副业与搞钱信号",
+        title: "刷到别人靠小技能接单、做副业或发帖赚到第一笔零花钱，你会？",
+        options: [
+          { text: "立刻拆解人家怎么做，结合自己会的点子先跑通一个小测试", score: 4, dims: [95, 74, 82] },
+          { text: "先收藏研究、摸清门道，等手头空出时间就稳步去试一试", score: 3, dims: [78, 78, 74] },
+          { text: "买了一堆教程或工具，前三天干劲十足，一没反馈就搁置吃灰", score: 1, dims: [62, 38, 60] },
+          { text: "觉得自己既没空也没资源，叹口气继续刷手机，啥也没动", score: 0, dims: [34, 48, 45] }
+        ]
+      },
+      {
+        tag: "群红包与抽奖手气",
+        title: "微信群里突然发拼手气红包，或者品牌抽奖、刮刮乐活动，你的状态是？",
+        options: [
+          { text: "随缘点一下，抢到算添个彩头，抢不到也完全不放在心上", score: 3, dims: [68, 74, 82] },
+          { text: "手速挺快，偶尔还能抢个最佳手气，乐呵一下就接着忙正事", score: 4, dims: [76, 72, 92] },
+          { text: "总觉得自己属于“分母体质”，每次垫底都忍不住自嘲两句", score: 1, dims: [56, 58, 38] },
+          { text: "特别容易为了抽奖、扭蛋或盲盒连着试好几次，结果越抽越上头", score: 0, dims: [45, 24, 34] }
+        ]
+      },
+      {
+        tag: "人情随礼与请客",
+        title: "遇到朋友结婚、生娃、升学随礼，或者聚餐抢着买单，你一般怎么处理？",
+        options: [
+          { text: "心里早有年度人情预算，按交情和能力量力而行，不打肿脸充胖子", score: 4, dims: [76, 90, 74] },
+          { text: "正常随份子、轮流请客，大家礼尚往来，算得清楚也大方", score: 3, dims: [70, 76, 72] },
+          { text: "碍于面子不好意思拒绝，哪怕这个月吃土也要硬着头皮撑过去", score: 1, dims: [58, 34, 62] },
+          { text: "经常忘记记账或没算清余额，随完才发现连下周吃饭都紧巴巴", score: 0, dims: [46, 22, 54] }
+        ]
+      },
+      {
+        tag: "闲置与捡漏眼光",
+        title: "家里翻出闲置物品，或者逛二手/折扣店遇到好东西，你会？",
+        options: [
+          { text: "定期清理闲置回血，买东西也擅长挑性价比高、耐用的硬货", score: 4, dims: [86, 86, 80] },
+          { text: "能用上的留着，实在用不上的偶尔挂挂看，顺其自然", score: 3, dims: [68, 74, 72] },
+          { text: "闲置堆成山懒得整理，但看到“白菜价”又忍不住顺手买一堆", score: 1, dims: [52, 42, 64] },
+          { text: "买的时候觉得捡了大漏，买完发现根本没用上，等于变相花钱", score: 0, dims: [42, 24, 48] }
+        ]
+      },
+      {
+        tag: "谈钱与开口要价",
+        title: "轮到你谈薪资、报副业价格，或者向别人讨回原本就该给你的钱时，你？",
+        options: [
+          { text: "理直气壮亮出自己的价值和底线，该拿多少就清晰沟通", score: 4, dims: [94, 82, 76] },
+          { text: "提前做好功课和理由，虽然有点紧张但还是会争取合理回报", score: 3, dims: [76, 74, 68] },
+          { text: "总怕开口显得斤斤计较，往往报低价或不好意思催款", score: 1, dims: [48, 52, 56] },
+          { text: "干脆回避谈钱，宁愿自己吃点亏也不想开口拉扯", score: 0, dims: [32, 44, 46] }
+        ]
+      },
+      {
+        tag: "小钱与大钱态度",
+        title: "走在路上捡到几十块，或者平时买菜、打车遇到几块钱的差价，你会？",
+        options: [
+          { text: "小钱不放过、大钱不乱花，习惯顺手核对账单和优惠", score: 4, dims: [80, 90, 84] },
+          { text: "几块钱无所谓，但如果是几百上千的账目一定会认真核对", score: 3, dims: [70, 78, 74] },
+          { text: "平时对几块钱毫不在意，结果一个月算下来光小额支出就不少", score: 1, dims: [56, 36, 60] },
+          { text: "账单看都不看，银行卡里剩多少全靠感觉猜", score: 0, dims: [40, 18, 52] }
+        ]
+      },
+      {
+        tag: "搞钱心态底色",
+        title: "如果用一句话形容你现在的搞钱状态，最贴切的是哪一种？",
+        options: [
+          { text: "稳步攒底气，也在主动找新的进账口子，越走越顺", score: 4, dims: [90, 88, 86] },
+          { text: "先做好手头事，慢慢攒经验，有机会就稳稳接住", score: 3, dims: [74, 80, 74] },
+          { text: "很想暴富但有点躺平，常常在“努力搞钱”和“算了摆烂”之间切换", score: 1, dims: [54, 46, 62] },
+          { text: "钱总是来得快去得更快，感觉财神姥还在考察我的记账能力", score: 0, dims: [44, 24, 56] }
+        ]
+      }
+    ];
+
+    // ==================== 4 类结果配置（含亲闺女/亲儿子 与 漏财散财童子） ====================
+    const RESULT_TIERS = [
+      {
+        min: 0,
+        max: 10,
+        tag: "名单边缘 · 漏斗待堵型",
+        title: "【漏财散财童子】",
+        index: "46%",
+        baseDims: [44, 22, 54],
+        traits: "你并不是没有搞钱的念头，而是属于典型的“钱路太滑、兜底太浅”体质。凑单满减、情绪消费、不好意思开口算账，很容易让辛苦进账的钱悄悄溜走。财神姥看着你直摇头：不是不给你送财，是怕刚递到手里就漏光啦。",
+        tips: "先别急着折腾高难度副业，从“发薪日先留一笔固定存款 + 购物前冷静 24 小时”做起；把漏风的几个小洞补上，存折数字很快就会有变化。"
+      },
+      {
+        min: 11,
+        max: 19,
+        tag: "潜力股 · 慢热蓄力型",
+        title: "【财神姥记名观察员】",
+        index: "68%",
+        baseDims: [64, 56, 66],
+        traits: "你的搞钱状态处于“有想法、能过日子，但还差一点破局火候”的阶段。日常消费不算太离谱，偶尔也能抓到一点小运气，但遇到副业起步、主动要价或持续攒钱时，容易三分钟热度或犹豫观望，属于财神姥正在观察中的潜力选手。",
+        tips: "挑一件最顺手的小事坚持做满 30 天，别同时开太多摊子；遇到该争取的报酬或权益时，大方开口，别让好机会白白溜走。"
+      },
+      {
+        min: 20,
+        max: 28,
+        tag: "稳健派 · 进退有度型",
+        title: "【财神姥重点偏爱生】",
+        index: "83%",
+        baseDims: [80, 84, 78],
+        traits: "你既有务实的攒钱意识，又有不错的生活掌控力，懂得分清“该花的快乐钱”和“不能乱动的底气钱”。人情往来和日常开销比较有章法，做事靠谱不瞎折腾，是财神姥很放心把机会交到你手上的稳健型选手。",
+        tips: "守住现有攒钱节奏的同时，可以适度放大吸金动作——比如把擅长技能做成可复用产品、多拓展靠谱人脉，让稳健底盘叠加上升空间。"
+      },
+      {
+        min: 29,
+        max: 36,
+        tag: "满级偏爱 · 吸金守财双在线",
+        title: "【财神姥亲闺女 / 亲儿子】",
+        index: "96%",
+        baseDims: [94, 92, 88],
+        traits: "恭喜你直接挤进财神姥的偏爱名单前排！你既敢看准机会出手变现，又懂得守住现金流和底线，不盲目跟风凑单，也不轻易在谈钱时吃亏。吸金力与守财力兼备，哪怕起步阶段不张扬，也特别容易越攒越旺、越做越顺。",
+        tips: "继续保持清醒和执行力，同时注意平衡精力，别把所有时间都绷得太紧；顺风局里稳扎稳打，把优势沉淀成长期复利。"
+      }
+    ];
+
+    let qIdx = 0;
+    let pickedList = new Array(QUESTIONS.length).fill(null);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      runSparks();
+      const num = 19480 + Math.floor(Math.random() * 350);
+      document.getElementById("tested-num").textContent = num.toLocaleString();
+    });
+
+    function showMsg(text) {
+      const el = document.getElementById("msg-toast");
+      el.textContent = text;
+      el.classList.remove("hidden");
+      clearTimeout(window.__msgTimer);
+      window.__msgTimer = setTimeout(() => {
+        el.classList.add("hidden");
+      }, 2200);
+    }
+
+    function beginTest() {
+      qIdx = 0;
+      pickedList = new Array(QUESTIONS.length).fill(null);
+      document.getElementById("view-intro").classList.add("hidden");
+      document.getElementById("view-result").classList.add("hidden");
+      document.getElementById("view-quiz").classList.remove("hidden");
+      drawQuestion();
+    }
+
+    function drawQuestion() {
+      const item = QUESTIONS[qIdx];
+      document.getElementById("step-num").textContent = String(qIdx + 1).padStart(2, "0");
+      document.getElementById("step-tag").textContent = item.tag;
+      document.getElementById("question-text").textContent = item.title;
+      document.getElementById("step-bar").style.width = `${((qIdx + 1) / QUESTIONS.length) * 100}%`;
+
+      const prevBtn = document.getElementById("prev-btn");
+      if (qIdx > 0) {
+        prevBtn.classList.remove("opacity-40", "pointer-events-none");
+      } else {
+        prevBtn.classList.add("opacity-40", "pointer-events-none");
+      }
+
+      const wrap = document.getElementById("choices-wrap");
+      wrap.innerHTML = "";
+      const letters = ["A", "B", "C", "D"];
+
+      item.options.forEach((opt, idx) => {
+        const selected = pickedList[qIdx] === idx;
+        const btn = document.createElement("button");
+        btn.className = `choice-card w-full text-left p-4 rounded-2xl flex items-start gap-3.5 cursor-pointer ${selected ? "active" : ""}`;
+        btn.onclick = () => pickChoice(idx);
+
+        btn.innerHTML = `
+          <span class="font-num w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${selected ? "bg-amber-300 text-stone-950" : "bg-amber-400/10 text-amber-200 border border-amber-300/30"}">
+            ${letters[idx]}
+          </span>
+          <span class="text-xs sm:text-sm text-rose-50 leading-relaxed">${opt.text}</span>
+        `;
+        wrap.appendChild(btn);
+      });
+
+      const qBox = document.getElementById("question-box");
+      qBox.classList.remove("animate-rise");
+      void qBox.offsetWidth;
+      qBox.classList.add("animate-rise");
+    }
+
+    function pickChoice(idx) {
+      pickedList[qIdx] = idx;
+      drawQuestion();
+
+      setTimeout(() => {
+        if (qIdx < QUESTIONS.length - 1) {
+          qIdx++;
+          drawQuestion();
+        } else {
+          computeResult();
+        }
+      }, 220);
+    }
+
+    function goPrev() {
+      if (qIdx > 0) {
+        qIdx--;
+        drawQuestion();
+      }
+    }
+
+    function computeResult() {
+      document.getElementById("view-quiz").classList.add("hidden");
+      document.getElementById("view-loading").classList.remove("hidden");
+      document.getElementById("calc-hint").textContent = "正在核对你的吸金力、守财力与偏财运...";
+
+      const hintTimer = setTimeout(() => {
+        document.getElementById("calc-hint").textContent = "正在生成你的财神姥偏爱档案...";
+      }, 650);
+
+      let scoreSum = 0;
+      let dimTotals = [0, 0, 0];
+
+      pickedList.forEach((choiceIdx, i) => {
+        const opt = QUESTIONS[i].options[choiceIdx ?? 0];
+        scoreSum += opt.score;
+        for (let d = 0; d < 3; d++) {
+          dimTotals[d] += opt.dims[d];
+        }
+      });
+
+      const tier = RESULT_TIERS.find(t => scoreSum >= t.min && scoreSum <= t.max) || RESULT_TIERS[1];
+      const finalDims = tier.baseDims.map((base, d) => {
+        const avg = Math.round(dimTotals[d] / QUESTIONS.length);
+        return Math.min(99, Math.max(20, Math.round(base * 0.65 + avg * 0.35)));
+      });
+
+      setTimeout(() => {
+        clearTimeout(hintTimer);
+        document.getElementById("view-loading").classList.add("hidden");
+        document.getElementById("view-result").classList.remove("hidden");
+
+        document.getElementById("ticket-no").textContent = String(1000 + Math.floor(Math.random() * 8999));
+        document.getElementById("res-tag").textContent = tier.tag;
+        document.getElementById("res-title").textContent = tier.title;
+        document.getElementById("res-score").textContent = `${scoreSum} / 36`;
+        document.getElementById("res-index").textContent = tier.index;
+        document.getElementById("res-traits").textContent = tier.traits;
+        document.getElementById("res-tips").textContent = tier.tips;
+
+        setTimeout(() => {
+          finalDims.forEach((val, d) => {
+            document.getElementById(`d-val-${d + 1}`).textContent = `${val}%`;
+            document.getElementById(`d-bar-${d + 1}`).style.width = `${val}%`;
+          });
+        }, 100);
+      }, 1350);
+    }
+
+    function againTest() {
+      for (let d = 1; d <= 3; d++) {
+        document.getElementById(`d-bar-${d}`).style.width = "0%";
+      }
+      beginTest();
+    }
+
+    // ==================== 一键导出结果海报 ====================
+    function makePoster() {
+      const btn = document.getElementById("export-btn");
+      const oldLabel = btn.textContent;
+      btn.textContent = "正在生成海报...";
+      btn.disabled = true;
+
+      const area = document.getElementById("result-poster");
+      html2canvas(area, {
+        backgroundColor: "#14080b",
+        scale: 2,
+        useCORS: true,
+        logging: false
+      }).then(canvas => {
+        const dataUrl = canvas.toDataURL("image/png");
+        document.getElementById("poster-preview").innerHTML =
+          `<img src="${dataUrl}" alt="财神姥偏爱名单海报" class="w-full h-auto block" />`;
+        document.getElementById("poster-modal").classList.remove("hidden");
+        btn.textContent = oldLabel;
+        btn.disabled = false;
+      }).catch(() => {
+        showMsg("生成失败，可直接使用手机截图保存");
+        btn.textContent = oldLabel;
+        btn.disabled = false;
+      });
+    }
+
+    function hidePosterModal() {
+      document.getElementById("poster-modal").classList.add("hidden");
+    }
+
+    // ==================== 背景暖金微光 ====================
+    function runSparks() {
+      const canvas = document.getElementById("spark-canvas");
+      const ctx = canvas.getContext("2d");
+      let w = (canvas.width = window.innerWidth);
+      let h = (canvas.height = window.innerHeight);
+
+      window.addEventListener("resize", () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+
+      const dots = Array.from({ length: 24 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 0.8,
+        vy: Math.random() * 0.4 + 0.15,
+        vx: (Math.random() - 0.5) * 0.25,
+        alpha: Math.random() * 0.5 + 0.15,
+        gold: Math.random() > 0.3
+      }));
+
+      function frame() {
+        ctx.clearRect(0, 0, w, h);
+        dots.forEach(dot => {
+          dot.y -= dot.vy;
+          dot.x += dot.vx;
+          if (dot.y < -8) {
+            dot.y = h + 8;
+            dot.x = Math.random() * w;
+          }
+          ctx.save();
+          ctx.globalAlpha = dot.alpha;
+          ctx.fillStyle = dot.gold ? "#f6c453" : "#fb7185";
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+        requestAnimationFrame(frame);
+      }
+      frame();
+    }
+  </script>
+</body>
+</html>
